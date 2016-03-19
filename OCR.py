@@ -11,14 +11,13 @@ class OCR:
         self.character_option = None
         self.initWindow()
 
-        
-
     def initWindow(self):
         self.window = tkinter.Tk()
         self.window.title("Simple OCR")
         # self.window.geometry("300x300")
+        self.points = []
         
-        self.drawing_area = tkinter.Canvas(self.window, background="white")
+        self.drawing_area = tkinter.Canvas(self.window, width=256, height=256, background="white")
 
         self.character_option = tkinter.IntVar()
         self.character_option.set(0)
@@ -34,20 +33,21 @@ class OCR:
         self.drawing_area.bind("<ButtonPress-1>", self.mouse_key_pressed)
         self.drawing_area.bind("<ButtonRelease-1>", self.mouse_key_released)
         
-        self.drawing_area.grid(row=0, column=0)
-        self.number.grid(row=0, column=1)
-        self.letter.grid(row=1, column=1)
-        self.lblCharacter.grid(row=2, column=1)
-        self.btnClear.grid(row=3, column=1)
-        self.btnCompute.grid(row=4, column=1)
+        self.drawing_area.pack()
+        self.number.pack()
+        self.letter.pack()
+        self.lblCharacter.pack(pady=10)
+        self.btnClear.pack()
+        self.btnCompute.pack()
 
         self.window.mainloop()
 
     def clear_canvas(self):
-        print("Clear")
+        self.drawing_area.delete("all")
+        self.points = []
 
     def compute_character(self):
-        print("Compute")
+        print(self.points)
 
     def mouse_key_pressed(self, event):
         self.key_state = 1
@@ -61,6 +61,8 @@ class OCR:
                 event.widget.create_line(self.x_val,self.y_val,event.x,event.y,smooth=True)
             self.x_val = event.x
             self.y_val = event.y
+            if self.x_val > 0 and self.y_val > 0:
+                self.points.append((self.x_val, self.y_val))
             # print("X: ", self.x_val, "Y: ", self.y_val)
 
 def main():
