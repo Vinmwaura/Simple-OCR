@@ -62,7 +62,7 @@ class OCR:
             self.x_val = event.x
             self.y_val = event.y
             if self.x_val > 0 and self.y_val > 0:
-                self.points.append((self.x_val, self.y_val))
+                self.points.append((self.y_val, self.x_val))
             # print("X: ", self.x_val, "Y: ", self.y_val)
 
 def main():
