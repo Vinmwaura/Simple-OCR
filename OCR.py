@@ -21,7 +21,6 @@ class OCR:
     def initWindow(self):
         self.window = tkinter.Tk()
         self.window.title("Simple OCR")
-        # self.window.geometry("300x300")
         self.points = []
         
         self.drawing_area = tkinter.Canvas(self.window, width=256, height=256, background="white")
@@ -68,7 +67,6 @@ class OCR:
     def mouse_key_pressed(self, event):
         self.key_state = 1
 
-    #Defines pixel neighbours for traversal
     def get_pixel_points(self):
         pixel_point = []
         if len(self.points):
