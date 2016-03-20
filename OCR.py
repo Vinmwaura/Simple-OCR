@@ -32,6 +32,7 @@ class OCR:
         self.letter = tkinter.Radiobutton(self.window, text="Letter", value=1,variable=self.character_option)
         
         self.lblCharacter = tkinter.Label(self.window, text="Character: ")
+        self.lblComputed = tkinter.Label(self.window, text="")
 
         self.btnClear = tkinter.Button(self.window, text="Clear", command=self.clear_canvas)
         self.btnCompute = tkinter.Button(self.window, text="Compute", command=self.compute_character)
@@ -40,12 +41,13 @@ class OCR:
         self.drawing_area.bind("<ButtonPress-1>", self.mouse_key_pressed)
         self.drawing_area.bind("<ButtonRelease-1>", self.mouse_key_released)
         
-        self.drawing_area.pack()
-        self.number.pack()
-        self.letter.pack()
-        self.lblCharacter.pack(pady=10)
-        self.btnClear.pack()
-        self.btnCompute.pack()
+        self.drawing_area.grid(column = 0, row = 0, columnspan=2)
+        self.number.grid(column = 0, row = 1)
+        self.letter.grid(column = 1, row = 1)
+        self.lblCharacter.grid(column = 0, row = 2)
+        self.lblComputed.grid(column = 1, row = 2)
+        self.btnClear.grid(column = 0, row = 3)
+        self.btnCompute.grid(column = 1, row = 3)
 
         self.window.mainloop()
 
@@ -53,6 +55,7 @@ class OCR:
         self.drawing_area.delete("all")
         self.points = []
         self.x_val, self.y_val = None, None
+        self.lblComputed.config(text="")
 
     def compute_character(self):
         if len(self.points) > 0:
@@ -60,7 +63,7 @@ class OCR:
             pixels = self.get_pixel_points()
             input_image = self.process.process_image(pixels)
             character = self.neural_net.compute_character(input_image, status)
-            print(character)
+            self.lblComputed.config(text=character)
         
     def mouse_key_pressed(self, event):
         self.key_state = 1
