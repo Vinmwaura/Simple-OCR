@@ -1,6 +1,9 @@
 import numpy as np
 import tkinter
 
+import process
+import neural_network
+
 
 class OCR:
     def __init__(self):
@@ -8,6 +11,10 @@ class OCR:
         self.x_val, self.y_val = None, None
         self.window = None
         self.drawing_area = None
+
+        self.process = process.Process()
+        self.neural_net = neural_network.NeuralNetwork()
+
         self.character_option = None
         self.initWindow()
 
@@ -45,20 +52,52 @@ class OCR:
     def clear_canvas(self):
         self.drawing_area.delete("all")
         self.points = []
+        self.x_val, self.y_val = None, None
 
     def compute_character(self):
-        print(self.points)
-
+        if len(self.points) > 0:
+            status = self.character_option.get()
+            pixels = self.get_pixel_points()
+            input_image = self.process.process_image(pixels)
+            character = self.neural_net.compute_character(input_image, status)
+            print(character)
+        
     def mouse_key_pressed(self, event):
         self.key_state = 1
 
+    #Defines pixel neighbours for traversal
+    def get_pixel_points(self):
+        pixel_point = []
+        if len(self.points):
+            for point in self.points:
+                x, y = point
+                
+                for num in range(1,3):
+                    neighbours = [
+                        (x, y-num),
+                        (x-num, y-num),
+                        (x-num, y),
+                        (x-num, y+num),
+                        (x, y+num),
+                        (x+num, y+num),
+                        (x+num, y),
+                        (x+num, y-num),
+                    ]
+
+                    for neighbour in neighbours:
+                        if neighbour not in pixel_point:
+                            pixel_point.append(neighbour)
+                pixel_point.extend(self.points)
+        return pixel_point 
+
     def mouse_key_released(self, event):
         self.key_state = 0
+        self.x_val, self.y_val = None, None
 
     def mouse_moved(self, event):
         if self.key_state == 1:
             if self.x_val is not None and self.y_val is not None:
-                event.widget.create_line(self.x_val,self.y_val,event.x,event.y,smooth=True)
+                event.widget.create_line(self.x_val,self.y_val,event.x,event.y,smooth=True, width=7)
             self.x_val = event.x
             self.y_val = event.y
             if self.x_val > 0 and self.y_val > 0:

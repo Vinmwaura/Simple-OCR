@@ -50,12 +50,14 @@ class NeuralNetwork:
         return np.exp(out_O) / np.sum(np.exp(out_O))
 
     def forward(self, input_data, character_set):
-        if character_set == 0:
+        # Letters
+        if character_set == 1:
             input_to_hidden = self.letter_weights[0]
             hidden_to_output = self.letter_weights[1]
             ascii_value = 65
 
-        elif character_set == 1:
+        # Numbers
+        elif character_set == 0:
             input_to_hidden = self.number_weights[0]
             hidden_to_output = self.number_weights[1]
             ascii_value = 48
